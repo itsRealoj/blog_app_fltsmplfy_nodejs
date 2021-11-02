@@ -17,6 +17,10 @@ const postSchema = mongoose.Schema(
         type: Number,
         default: 0,
     },
+    comments: {
+      type: Array,
+      default: [],
+  },
     unlikesCount: {
       type: Number,
       default: 0,

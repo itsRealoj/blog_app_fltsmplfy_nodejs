@@ -105,6 +105,48 @@ console.log('user: ', req.user._id)
   }
 })
 
+const unlikePost = asyncHandler(async (req, res) => {
+    console.log('user: ', req.user._id)
+    
+      const post = await Post.findById(req.params.id)
+    
+      if (post) {
+          let likesList = post.likes
+          let userId = req.user._id
+          let likerIndex = likesList.indexOf(userId)
+          if(likerIndex > -1) {
+            likesList.splice(likerIndex, 1)
+          }
+        post.likes = likesList
+        post.likesCount = post.likesCount -= 1
+        post.unlikesCount = post.unlikesCount += 1
+        
+        await post.save()
+        res.status(201).json({ message: 'You unliked the post!' })
+      } else {
+        res.status(404)
+        throw new Error('Post not found')
+      }
+    })
+    
+    
+    const commentPost = asyncHandler(async (req, res) => {
+        const { comment } = req.body
+        console.log('comment: ', comment)
+        const post = await Post.findById(req.params.id)
+        
+        if (post) {
+          post.comments = [...post.comments, {comment, userId: req.user._id}]
+
+          await post.save()
+          res.status(201).json({ message: 'Kudos! You commented on this post.' })
+        } else {
+          res.status(404)
+          throw new Error('Post not found')
+        }
+    })
+
+
 const getTopPosts = asyncHandler(async (req, res) => {
   const posts = await Post.find({}).sort({ rating: -1 }).limit(3)
 
@@ -118,5 +160,7 @@ export {
   createPost,
   updatePost,
   likePost,
+  unlikePost,
   getTopPosts,
+  commentPost,
 }
