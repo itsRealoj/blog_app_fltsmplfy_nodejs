@@ -108,7 +108,10 @@ if(!req.user) {
 })
 
 const unlikePost = asyncHandler(async (req, res) => {
-    console.log('user: ', req.user._id)
+    if(!req.user) {
+        res.status(401)
+        throw new Error('You are not logged in, log in first to proceed!')
+    }
     
       const post = await Post.findById(req.params.id)
     
@@ -133,8 +136,11 @@ const unlikePost = asyncHandler(async (req, res) => {
     
     
     const commentPost = asyncHandler(async (req, res) => {
+        if(!req.user) {
+            res.status(401)
+            throw new Error('You are not logged in, log in first to proceed!')
+        }
         const { comment } = req.body
-        console.log('comment: ', comment)
         const post = await Post.findById(req.params.id)
         
         if (post) {
