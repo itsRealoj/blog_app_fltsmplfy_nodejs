@@ -19,7 +19,7 @@ router.route('/:id/comment').post(protect, commentPost)
 router
   .route('/:id')
   .get(protect, getPostById)
-  .delete(protect, deletePost)
+  .delete(deletePost)
   .put(protect, updatePost)
 
 export default router

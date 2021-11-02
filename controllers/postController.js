@@ -34,11 +34,6 @@ const getPostById = asyncHandler(async (req, res) => {
 })
 
 const deletePost = asyncHandler(async (req, res) => {
-    if(!req.user) {
-        res.status(401)
-        throw new Error('You are not logged in, log in first to proceed!')
-    }
-    
   const post = await Post.findById(req.params.id)
 
   if (post) {
