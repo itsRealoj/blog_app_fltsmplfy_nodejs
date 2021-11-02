@@ -3,9 +3,7 @@ import mongoose from 'mongoose'
 const postSchema = mongoose.Schema(
   {
     name: {
-      type: Number,
-      required: true,
-      default: 0,
+      type: String,
     },
     likes: {
       type: Array,
@@ -17,12 +15,10 @@ const postSchema = mongoose.Schema(
     },
     likesCount: {
         type: Number,
-        required: true,
         default: 0,
     },
     unlikesCount: {
       type: Number,
-      required: true,
       default: 0,
     },
     postedBy: {

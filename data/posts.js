@@ -9,3 +9,5 @@ const posts = [
         postedAt: new Date()
       },
 ];
+
+export default posts

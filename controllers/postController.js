@@ -47,15 +47,12 @@ const deletePost = asyncHandler(async (req, res) => {
 
 const createPost = asyncHandler(async (req, res) => {
   const post = new Post({
-    name: 'Sample name',
-    price: 0,
-    user: req.user._id,
-    image: '/images/sample.jpg',
-    brand: 'Sample brand',
-    category: 'Sample category',
-    countInStock: 0,
-    numReviews: 0,
-    description: 'Sample description',
+    name: 'Sample post',
+    postedBy: req.user._id,
+    likes: [],
+    unlikes: [],
+    unlikesCount: 0,
+    likesCount: 0,
   })
 
   const createdPost = await post.save()
@@ -65,24 +62,22 @@ const createPost = asyncHandler(async (req, res) => {
 const updatePost = asyncHandler(async (req, res) => {
   const {
     name,
-    price,
-    description,
-    image,
-    brand,
-    category,
-    countInStock,
+    likes,
+    likesCount,
+    unlikes,
+    unlikesCount,
+    postedBy,
   } = req.body
 
   const post = await Post.findById(req.params.id)
 
   if (post) {
     post.name = name
-    post.price = price
-    post.description = description
-    post.image = image
-    post.brand = brand
-    post.category = category
-    post.countInStock = countInStock
+    post.likes = likes
+    post.likesCount = likesCount
+    post.unlikes = unlikes
+    post.unlikesCount = unlikesCount
+    post.postedBy = postedBy
 
     const updatedPost = await post.save()
     res.json(updatedPost)
@@ -92,38 +87,18 @@ const updatePost = asyncHandler(async (req, res) => {
   }
 })
 
-const createPostReview = asyncHandler(async (req, res) => {
-  const { rating, comment } = req.body
+const likePost = asyncHandler(async (req, res) => {
+//   const { likes } = req.body
+console.log('user: ', req.user._id)
 
   const post = await Post.findById(req.params.id)
 
   if (post) {
-    const alreadyReviewed = post.reviews.find(
-      (r) => r.user.toString() === req.user._id.toString()
-    )
-
-    if (alreadyReviewed) {
-      res.status(400)
-      throw new Error('Post already reviewed')
-    }
-
-    const review = {
-      name: req.user.name,
-      rating: Number(rating),
-      comment,
-      user: req.user._id,
-    }
-
-    post.reviews.push(review)
-
-    post.numReviews = post.reviews.length
-
-    post.rating =
-      post.reviews.reduce((acc, item) => item.rating + acc, 0) /
-      post.reviews.length
-
+    post.likes.push(req.user._id)
+    post.likesCount = post.likesCount += 1
+    
     await post.save()
-    res.status(201).json({ message: 'Review added' })
+    res.status(201).json({ message: 'Kudos! You liked the post.' })
   } else {
     res.status(404)
     throw new Error('Post not found')
@@ -142,6 +117,6 @@ export {
   deletePost,
   createPost,
   updatePost,
-  createPostReview,
+  likePost,
   getTopPosts,
 }

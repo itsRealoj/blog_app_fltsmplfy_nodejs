@@ -20,6 +20,18 @@ const userSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    following: {
+      type: Array,
+      default: [],
+    },
+    followers: {
+      type: Array,
+      default: [],
+    },
+    unfollowers: {
+        type: Array,
+        default: [],
+    },
   },
   {
     timestamps: true,
