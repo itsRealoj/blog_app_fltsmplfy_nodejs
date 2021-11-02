@@ -88,8 +88,10 @@ const updatePost = asyncHandler(async (req, res) => {
 })
 
 const likePost = asyncHandler(async (req, res) => {
-//   const { likes } = req.body
-console.log('user: ', req.user._id)
+if(!req.user) {
+    res.status(401)
+    throw new Error('You are not logged in, log in first to proceed!')
+}
 
   const post = await Post.findById(req.params.id)
 
