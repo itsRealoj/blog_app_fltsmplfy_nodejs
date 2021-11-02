@@ -143,6 +143,11 @@ const updateUser = asyncHandler(async (req, res) => {
 })
 
 const followUser = asyncHandler(async (req, res) => {
+  if(!req.user) {
+    res.status(401)
+    throw new Error('You are not logged in, log in first to proceed!')
+}
+  
   let newlyFollowedUserId = req.params.id
   
     const user = await User.findById(req.user._id)
@@ -158,6 +163,11 @@ const followUser = asyncHandler(async (req, res) => {
   })
 
   const unfollowUser = asyncHandler(async (req, res) => {
+    if(!req.user) {
+      res.status(401)
+      throw new Error('You are not logged in, log in first to proceed!')
+  }
+    
     let newlyFollowedUserId = req.params.id
       const user = await User.findById(req.user._id)
     
