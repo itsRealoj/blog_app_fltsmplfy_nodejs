@@ -24,13 +24,9 @@ const userSchema = mongoose.Schema(
       type: Array,
       default: [],
     },
-    followers: {
+    unFollowing: {
       type: Array,
       default: [],
-    },
-    unfollowers: {
-        type: Array,
-        default: [],
     },
   },
   {

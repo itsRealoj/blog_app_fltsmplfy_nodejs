@@ -142,6 +142,46 @@ const updateUser = asyncHandler(async (req, res) => {
   }
 })
 
+const followUser = asyncHandler(async (req, res) => {
+  let newlyFollowedUserId = req.params.id
+  console.log('user id: ' + newlyFollowedUserId)
+  
+    const user = await User.findById(req.user._id)
+  
+    if (user) {
+      user.following = [...user.following, newlyFollowedUserId]
+      await user.save()
+      res.status(201).json({ message: 'Kudos! You just followed another user!' })
+    } else {
+      res.status(404)
+      throw new Error('User not found')
+    }
+  })
+
+  const unfollowUser = asyncHandler(async (req, res) => {
+    console.log('user: ', req.user._id)
+    
+      const user = await User.findById(req.params.id)
+    
+      if (user) {
+          let likesList = user.likes
+          let userId = req.user._id
+          let likerIndex = likesList.indexOf(userId)
+          if(likerIndex > -1) {
+            likesList.splice(likerIndex, 1)
+          }
+        user.likes = likesList
+        user.likesCount = user.likesCount -= 1
+        user.unlikesCount = user.unlikesCount += 1
+        
+        await user.save()
+        res.status(201).json({ message: 'You unliked the user!' })
+      } else {
+        res.status(404)
+        throw new Error('User not found')
+      }
+    })
+
 export {
   authUser,
   registerUser,
@@ -151,4 +191,6 @@ export {
   deleteUser,
   getUserById,
   updateUser,
+  followUser,
+  unfollowUser,
 }
