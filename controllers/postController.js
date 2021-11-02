@@ -34,6 +34,11 @@ const getPostById = asyncHandler(async (req, res) => {
 })
 
 const deletePost = asyncHandler(async (req, res) => {
+    if(!req.user) {
+        res.status(401)
+        throw new Error('You are not logged in, log in first to proceed!')
+    }
+    
   const post = await Post.findById(req.params.id)
 
   if (post) {
@@ -46,38 +51,37 @@ const deletePost = asyncHandler(async (req, res) => {
 })
 
 const createPost = asyncHandler(async (req, res) => {
-  const post = new Post({
-    name: 'Sample post',
-    postedBy: req.user._id,
-    likes: [],
-    unlikes: [],
-    unlikesCount: 0,
-    likesCount: 0,
-  })
-
-  const createdPost = await post.save()
-  res.status(201).json(createdPost)
+    if(!req.user) {
+        res.status(401)
+        throw new Error('You are not logged in, log in first to proceed!')
+    }
+    
+    const {name} = await req.body.name
+    console.log('body name: ', req.body.name)
+    const post = new Post({
+      name: req.body.name || 'Sample post',
+      postedAt: new Date(),
+      postedBy: req.user.name,
+      likes: [],
+      unlikes: [],
+      unlikesCount: 0,
+      likesCount: 0,
+    })  
+    const createdPost = await post.save()
+    res.status(201).json(createdPost)
 })
 
 const updatePost = asyncHandler(async (req, res) => {
-  const {
-    name,
-    likes,
-    likesCount,
-    unlikes,
-    unlikesCount,
-    postedBy,
-  } = req.body
+    if(!req.user) {
+        res.status(401)
+        throw new Error('You are not logged in, log in first to proceed!')
+    }
 
   const post = await Post.findById(req.params.id)
 
   if (post) {
-    post.name = name
-    post.likes = likes
-    post.likesCount = likesCount
-    post.unlikes = unlikes
-    post.unlikesCount = unlikesCount
-    post.postedBy = postedBy
+    post.name = req.body.name || post.name
+    post.updatedAt = new Date()
 
     const updatedPost = await post.save()
     res.json(updatedPost)

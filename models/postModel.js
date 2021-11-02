@@ -33,6 +33,9 @@ const postSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    updatedAt: {
+      type: String,
+    },
   },
   {
     timestamps: true,
