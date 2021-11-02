@@ -24,10 +24,6 @@ const userSchema = mongoose.Schema(
       type: Array,
       default: [],
     },
-    unFollowing: {
-      type: Array,
-      default: [],
-    },
   },
   {
     timestamps: true,

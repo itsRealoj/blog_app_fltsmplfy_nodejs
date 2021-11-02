@@ -144,7 +144,6 @@ const updateUser = asyncHandler(async (req, res) => {
 
 const followUser = asyncHandler(async (req, res) => {
   let newlyFollowedUserId = req.params.id
-  console.log('user id: ' + newlyFollowedUserId)
   
     const user = await User.findById(req.user._id)
   
@@ -159,28 +158,22 @@ const followUser = asyncHandler(async (req, res) => {
   })
 
   const unfollowUser = asyncHandler(async (req, res) => {
-    console.log('user: ', req.user._id)
-    
-      const user = await User.findById(req.params.id)
+    let newlyFollowedUserId = req.params.id
+      const user = await User.findById(req.user._id)
     
       if (user) {
-          let likesList = user.likes
-          let userId = req.user._id
-          let likerIndex = likesList.indexOf(userId)
-          if(likerIndex > -1) {
-            likesList.splice(likerIndex, 1)
-          }
-        user.likes = likesList
-        user.likesCount = user.likesCount -= 1
-        user.unlikesCount = user.unlikesCount += 1
-        
+        let followedUserIndex = user.following.indexOf(newlyFollowedUserId)
+        if( followedUserIndex > -1) {
+          user.following = user.following.splice(followedUserIndex, 1)
+        }
         await user.save()
-        res.status(201).json({ message: 'You unliked the user!' })
+        res.status(201).json({ message: 'You just unfollowed one user!' })
       } else {
         res.status(404)
         throw new Error('User not found')
       }
     })
+  
 
 export {
   authUser,
