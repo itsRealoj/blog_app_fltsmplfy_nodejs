@@ -3,7 +3,12 @@
   "version": "1.0.0",
   "description": "test for fleetsimplify",
   "main": "index.js",
+  "type": "module",
   "scripts": {
+    "start": "node server",
+    "server": "nodemon server",
+    "data:import": "node seeder",
+    "data:destroy": "node seeder -d",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Stephen Ochieng",
@@ -13,9 +18,13 @@
     "colors": "^1.4.0",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
+    "express-async-handler": "^1.2.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.0.12",
     "morgan": "^1.10.0",
     "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.14"
   }
 }
